@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='corsair_scan',
-      version='0.1',
+      version='0.1.0',
       description='CORS testing library',
       author='Santander UK Security Engineering',
       packages=['corsair_scan'],
