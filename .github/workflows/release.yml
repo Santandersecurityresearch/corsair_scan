@@ -1,0 +1,102 @@
+name: corsair_scan Pull Request handler
+on: push
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            max-parallel: 4
+            matrix:
+                python-version: [3.8]
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v1
+
+            - name: Set up Python
+              uses: actions/setup-python@v1
+              with:
+                 python-version: ${{ matrix.python-version }}
+
+            - name: Install PIP Dependencies
+              run: pip install -r requirements_dev.txt
+
+            - name: Test with Pytest
+              run: python -m pytest --cov=corsair_scan --cov-report=html:coverage/${{ matrix.python-version }} --cov-fail-under=85 -o junit_family=xunit2 --junitxml=${{ matrix.python-version }}.results.xml
+
+            - name: Upload Test results
+              uses: actions/upload-artifact@master
+              with:
+                name: Test Results - ${{ matrix.python-version }}
+                path: ${{ matrix.python-version }}.results.xml
+
+            - name: Upload Code Coverage
+              uses: actions/upload-artifact@master
+              with:
+                 name: Test Coverage - ${{ matrix.python-version }}
+                 path: coverage/${{ matrix.python-version }}
+
+            - name: Flake8 styles
+              run: python -m flake8 ./corsair_scan
+
+            - name: Bandit security scan
+              run: python -m bandit -r ./corsair_scan
+
+            - name: Safety dependency scan
+              run: python -m safety check
+
+            - name: Semgrep
+              id: semgrep
+              uses: returntocorp/semgrep-action@v1
+              with:
+                 config: p/r2c-ci
+
+            - name: Make Wheel
+              run: |
+                python3 setup.py sdist bdist_wheel
+                
+            - name: Dump build info for release
+              run: |
+                 git log --pretty=oneline > changelog
+                 python3 setup.py --version > version     
+                 
+            - name: Get bumpversion
+              run: echo name=VERSION >> $(grep -i 'current_version = ' setup.cfg | head -1 | tr -d 'current_version = ')
+
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1.0.1
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                tag_name: v${{ env.VERSION}}
+                release_name: Release v${{ env.VERSION }}
+                draft: false
+                prerelease: false
+              
+            - name: Upload Wheel
+              id: upload_wheel
+              uses: actions/upload-release-asset@v1.0.1
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                upload_url: ${{ steps.create_release.outputs.upload_url }} 
+                asset_path: ./dist/corsair_scan-${{ env.VERSION }}-py2.py3-none-any.whl
+                asset_name: Corsair_scan Wheel
+                asset_content_type: application/x-python-wheel
+            
+            - name: Upload Changelog
+              id: upload_changelog
+              uses: actions/upload-release-asset@v1.0.1
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                upload_url: ${{ steps.create_release.outputs.upload_url }} 
+                asset_path: changelog
+                asset_name: Corsair_scan changelog
+                asset_content_type: text/plain
+
+            - name: Publish
+              env:
+                TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+                TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+              run: |
+                twine upload dist/*
