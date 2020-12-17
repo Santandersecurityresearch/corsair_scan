@@ -61,7 +61,11 @@ jobs:
             - name: Get bumpversion
               run: echo "VERSION"= $(grep -i 'current_version = ' setup.cfg | head -1 | tr -d 'current_version = ') >> $GITHUB_ENV
             - name: envs
-              run: env
+              run: echo ${{ VERSION }}
+
+
+            - name: envs
+              run: echo ${{ env.VERSION }}
 
             # - name: Create Release
             #   id: create_release
