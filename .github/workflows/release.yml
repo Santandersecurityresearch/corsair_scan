@@ -59,9 +59,9 @@ jobs:
                  python3 setup.py --version > version     
                  
             - name: Get bumpversion
+              - run: echo "version is $(grep -i 'current_version = ' setup.cfg | head -1 | tr -d 'current_version = ') "
               env: 
                 VERSION: $(grep -i 'current_version = ' setup.cfg | head -1 | tr -d 'current_version = ') 
-              - run: echo ${{VERSION}}
 
             - name: Create Release
               id: create_release
