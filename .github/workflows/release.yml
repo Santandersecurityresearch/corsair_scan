@@ -59,7 +59,9 @@ jobs:
                  python3 setup.py --version > version     
                  
             - name: Get bumpversion
-              run: echo VERSION = $(grep -i 'current_version = ' setup.cfg | head -1 | tr -d 'current_version = ') $GITHUB_ENV
+              env: 
+                VERSION: $(grep -i 'current_version = ' setup.cfg | head -1 | tr -d 'current_version = ') 
+              - run: echo ${{VERSION}}
 
             - name: Create Release
               id: create_release
@@ -67,8 +69,8 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                tag_name: v$VERSION
-                release_name: Release v$VERSION
+                tag_name: v${{ VERSION}}
+                release_name: Release v${{ VERSION }}
                 draft: false
                 prerelease: false
               
@@ -79,7 +81,7 @@ jobs:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
                 upload_url: ${{ steps.create_release.outputs.upload_url }} 
-                asset_path: ./dist/corsair_scan-$VERSION-py2.py3-none-any.whl
+                asset_path: ./dist/corsair_scan-${{ VERSION }}-py2.py3-none-any.whl
                 asset_name: Corsair_scan Wheel
                 asset_content_type: application/x-python-wheel
             
