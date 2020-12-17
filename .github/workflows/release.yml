@@ -67,8 +67,8 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                tag_name: v${{ env.VERSION}}
-                release_name: Release v${{ env.VERSION }}
+                tag_name: v${{ VERSION}}
+                release_name: Release v${{ VERSION }}
                 draft: false
                 prerelease: false
               
@@ -79,7 +79,7 @@ jobs:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
                 upload_url: ${{ steps.create_release.outputs.upload_url }} 
-                asset_path: ./dist/corsair_scan-${{ env.VERSION }}-py2.py3-none-any.whl
+                asset_path: ./dist/corsair_scan-${{ VERSION }}-py2.py3-none-any.whl
                 asset_name: Corsair_scan Wheel
                 asset_content_type: application/x-python-wheel
             
