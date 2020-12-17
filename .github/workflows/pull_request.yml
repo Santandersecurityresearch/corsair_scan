@@ -49,22 +49,22 @@ jobs:
               with:
                  config: p/r2c-ci
 
-            - name: Checkout origin branch if PR 'to-branch' is master
-              if: github.base_ref == 'master'
+            - name: Checkout origin branch if PR 'to-branch' is main
+              if: github.base_ref == 'main'
               uses: actions/checkout@v2
               with:
                 ref: ${{ github.head_ref }}
 
-            - name: BumpVersion if PR 'to-branch' is master
-              if: github.base_ref == 'master'
+            - name: BumpVersion if PR 'to-branch' is main
+              if: github.base_ref == 'main'
               run: |
                 grep -i 'current_version = ' setup.cfg | head -1 | tr -d 'current_version = '
                 git config --local user.email "action@github.com"
                 git config --local user.name "GitHub Action"
                 bump2version minor
                 grep -i 'current_version = ' setup.cfg | head -1 | tr -d 'current_version = '
-            - name: Push changes if PR 'to-branch' is master
-              if: github.base_ref == 'master'
+            - name: Push changes if PR 'to-branch' is main
+              if: github.base_ref == 'main'
               uses: ad-m/github-push-action@master
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
