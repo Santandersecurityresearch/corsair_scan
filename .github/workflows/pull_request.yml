@@ -1,12 +1,12 @@
-name: corsair_scan push
-on: push
+name: corsair_scan Pull Request handler
+on: pull_request
 jobs:
     build:
         runs-on: ubuntu-latest
         strategy:
             max-parallel: 4
             matrix:
-                python-version: [3.7, 3.8]
+                python-version: [3.8, 3.9]
         steps:
             - name: Checkout Code
               uses: actions/checkout@v1
@@ -48,3 +48,24 @@ jobs:
               uses: returntocorp/semgrep-action@v1
               with:
                  config: p/r2c-ci
+
+            - name: Checkout origin branch if PR 'to-branch' is main
+              if: github.base_ref == 'main'
+              uses: actions/checkout@v2
+              with:
+                ref: ${{ github.head_ref }}
+
+            - name: BumpVersion if PR 'to-branch' is main
+              if: github.base_ref == 'main'
+              run: |
+                grep -i 'current_version = ' setup.cfg | head -1 | tr -d 'current_version = '
+                git config --local user.email "action@github.com"
+                git config --local user.name "GitHub Action"
+                bump2version minor
+                grep -i 'current_version = ' setup.cfg | head -1 | tr -d 'current_version = '
+            - name: Push changes if PR 'to-branch' is main
+              if: github.base_ref == 'main'
+              uses: ad-m/github-push-action@master
+              with:
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                branch: ${{ github.head_ref }}
