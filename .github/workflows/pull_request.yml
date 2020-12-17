@@ -1,5 +1,5 @@
 name: corsair_scan Pull Request handler
-on: pull_request
+on: push
 jobs:
     build:
         runs-on: ubuntu-latest
