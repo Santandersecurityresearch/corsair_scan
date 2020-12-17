@@ -61,7 +61,7 @@ jobs:
                  python3 setup.py --version > version     
                  
             - name: Get bumpversion
-              run: echo "VERSION"= $(grep -i 'current_version = ' setup.cfg | head -1 | tr -d 'current_version = ') >> $GITHUB_ENV
+              run: echo "VERSION"=$(grep -i 'current_version = ' setup.cfg | head -1 | tr -d 'current_version = ') >> $GITHUB_ENV
 
 
             - name: Create Release
