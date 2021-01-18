@@ -3,7 +3,7 @@ requests>=2.23.0
 urllib3>=1.25.9
 mock>=4.0.2
 pytest==3.8.2
-pytest-cov==2.5.1
+pytest-cov==2.11.0
 wheel
 tldextract>=2.2.3
 flake8==3.7.9
