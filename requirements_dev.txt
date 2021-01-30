@@ -10,4 +10,4 @@ flake8==3.8.4
 bandit==1.6.2
 safety==1.9.0
 bump2version==1.0.0
-twine==3.1.1
+twine==3.2.0
