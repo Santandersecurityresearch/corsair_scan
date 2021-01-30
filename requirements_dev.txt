@@ -6,7 +6,7 @@ pytest==3.8.2
 pytest-cov==2.5.1
 wheel
 tldextract>=2.2.3
-flake8==3.7.9
+flake8==3.8.4
 bandit==1.6.2
 safety==1.9.0
 bump2version==1.0.0
