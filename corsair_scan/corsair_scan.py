@@ -45,7 +45,7 @@ def corsair_scan_single_url(url_data: dict, verify: bool = True) -> dict:
             parsed_url = urlparse(url_data.get('headers').get('Origin'))
             parsed_domain = tldextract.extract(parsed_url.netloc)
             predomain: str = parsed_url.scheme + '://' + parsed_domain.subdomain + '.' + SM_ORIGIN_DOMAIN + \
-                             parsed_domain.domain + '.' + parsed_domain.suffix
+                parsed_domain.domain + '.' + parsed_domain.suffix
             subdomain: str = parsed_url.scheme + '://' + SM_ORIGIN_DOMAIN + '.' + parsed_url.netloc
             postdomain: str = url_data.get('headers').get('Origin') + '.' + SM_ORIGIN_NO_PROTOCOL
             report['post-domain'] = validate_response(url_data, postdomain, verify)

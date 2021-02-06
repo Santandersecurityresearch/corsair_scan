@@ -15,7 +15,7 @@ def get_data_from_file(filename):
                     return datalist
                 else:
                     return data
-            except json.decoder.JSONDecodeError as e:
+            except json.decoder.JSONDecodeError:
                 print('Error. The format does not appear to be correct, please review')
                 sys.exit(2)
     except FileNotFoundError:
