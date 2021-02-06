@@ -29,21 +29,23 @@ def corsair_scan(data: list, verify: bool = True) -> dict:
     final_report: dict = {}
     for url in data:
         single_report: dict = corsair_scan_single_url(url, verify)
-        full_report.append(single_report.copy())
+        if single_report:
+            full_report.append(single_report.copy())
     final_report['summary'] = filter_report(full_report)
     final_report['report'] = full_report
     return final_report
 
 
 def corsair_scan_single_url(url_data: dict, verify: bool = True) -> dict:
-    report: dict = {'url': url_data.get('url'), 'verb': url_data.get('verb')}
-    if validate_data(url_data.get('url'), url_data.get('verb')):
+    report: dict = {}
+    if validate_data(url_data.get('url'), url_data.get('verb'), url_data.get('headers')):
+        report = {'url': url_data.get('url'), 'verb': url_data.get('verb')}
         report['fake_origin'] = validate_response(url_data, SM_ORIGIN, verify)
         if url_data.get('headers').get('Origin'):
             parsed_url = urlparse(url_data.get('headers').get('Origin'))
             parsed_domain = tldextract.extract(parsed_url.netloc)
             predomain: str = parsed_url.scheme + '://' + parsed_domain.subdomain + '.' + SM_ORIGIN_DOMAIN + \
-                parsed_domain.domain + '.' + parsed_domain.suffix
+                             parsed_domain.domain + '.' + parsed_domain.suffix
             subdomain: str = parsed_url.scheme + '://' + SM_ORIGIN_DOMAIN + '.' + parsed_url.netloc
             postdomain: str = url_data.get('headers').get('Origin') + '.' + SM_ORIGIN_NO_PROTOCOL
             report['post-domain'] = validate_response(url_data, postdomain, verify)
@@ -104,5 +106,6 @@ def filter_report(report_list: list) -> dict:
     return (final_report)
 
 
-def validate_data(url, verb):
-    return validators.url(url) and verb.lower() in VERBS
+def validate_data(url, verb, headers):
+    if url and verb and headers:
+        return validators.url(url) and verb.lower() in VERBS

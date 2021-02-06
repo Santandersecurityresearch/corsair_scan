@@ -26,11 +26,21 @@ def get_data_from_file(filename):
 @click.command()
 @click.argument('file', required=True)
 @click.option('-nv', '--noverify', 'verify', help='Skips security certificate check', is_flag=True, default=True)
-def run_cli_scan(file, verify):
+@click.option('-r', '--report', 'report', help='Saves the report in a JSON file')
+def run_cli_scan(file, verify, report):
     """Corsair CLI requires as parameter a file in JSON format with the data to run the scan.
     This data can be a single request, or a list of requests"""
     data = get_data_from_file(file)
-    print(corsair_scan.corsair_scan(data, verify))
+    corsair_report = corsair_scan.corsair_scan(data, verify)
+    if corsair_report.get('report'):
+        if report:
+            with open(report, 'w') as file:
+                file.write(json.dumps(corsair_report))
+                print("Report generated in {}".format(report))
+        else:
+            print(corsair_report)
+    else:
+        print("There was an error running corsair. Please check the input data is correct")
 
 
 if __name__ == "__main__":
