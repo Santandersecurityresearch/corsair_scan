@@ -1,7 +1,7 @@
 [{
   "verb": "GET",
   "url": "https://example.com/",
-  "paradms": "user=user1&password=1234",
+  "params": "user=user1&password=1234",
   "headers": {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Accept-Language": "en-GB,en;q=0.5",
