@@ -1,4 +1,4 @@
-import corsair_scan
+import corsair_scan.corsair_scan as corsair
 import click
 import json
 import sys
@@ -31,7 +31,7 @@ def run_cli_scan(file, verify, report):
     """Corsair CLI requires as parameter a file in JSON format with the data to run the scan.
     This data can be a single request, or a list of requests"""
     data = get_data_from_file(file)
-    corsair_report = corsair_scan.corsair_scan(data, verify)
+    corsair_report = corsair.corsair_scan(data, verify)
     if corsair_report.get('report'):
         if report:
             with open(report, 'w') as file:
@@ -42,6 +42,3 @@ def run_cli_scan(file, verify, report):
     else:
         print("There was an error running corsair. Please check the input data is correct")
 
-
-if __name__ == "__main__":
-    run_cli_scan()
