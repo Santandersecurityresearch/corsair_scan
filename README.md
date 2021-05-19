@@ -91,7 +91,7 @@ Receives a list of requests and a parameter to enable/disable certificate check 
 # Example
 
 ```
-import corsair_scan
+import corsair_scan.corsair_scan as corsair
 url_data = {}
 data = []
 verb =  'GET'
@@ -108,7 +108,7 @@ url_data['params'] = params
 url_data['headers'] = headers
 data.append(url_data)
 
-print (corsair_scan.corsair_scan(data, verify=True))
+print (corsair.corsair_scan(data, verify=True))
 ```
 
 
