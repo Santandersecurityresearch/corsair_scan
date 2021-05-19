@@ -1,3 +1,15 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+##################################################
+# Santander UK Security Engineering team.
+##################################################
+# MIT License Copyright (c) 2021 Grupo Santander
+##################################################
+# Author: Javier Dominguez Ruiz (@javixeneize)
+# Version: 1.0
+##################################################
+
 import corsair_scan.corsair_scan as corsair
 import click
 import json
@@ -41,4 +53,3 @@ def run_cli_scan(file, verify, report):
             print(corsair_report)
     else:
         print("There was an error running corsair. Please check the input data is correct")
-

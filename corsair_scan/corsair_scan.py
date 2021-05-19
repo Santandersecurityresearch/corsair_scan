@@ -109,5 +109,3 @@ def filter_report(report_list: list) -> dict:
 def validate_data(url, verb, headers):
     if url and verb and headers:
         return validators.url(url) and verb.lower() in VERBS
-
-
