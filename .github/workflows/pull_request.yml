@@ -20,7 +20,7 @@ jobs:
               run: pip install -r requirements_dev.txt
 
             - name: Test with Pytest
-              run: python -m pytest --cov=corsair_scan --cov-report=html:coverage/${{ matrix.python-version }} --cov-fail-under=85 -o junit_family=xunit2 --junitxml=${{ matrix.python-version }}.results.xml
+              run: python -m pytest --cov=corsair_scan --cov-report=html:coverage/${{ matrix.python-version }} --cov-fail-under=70 -o junit_family=xunit2 --junitxml=${{ matrix.python-version }}.results.xml
 
             - name: Upload Test results
               uses: actions/upload-artifact@master
