@@ -9,12 +9,14 @@ class TestCorsairScanManager(TestCase):
     def test_validate_data_wrong_url(self):
         verb = 'GET'
         url = 'htts://www.test.com'
-        self.assertFalse(corsair_scan.validate_data(url, verb), ' Error in wrong url test')
+        headers = {}
+        self.assertFalse(corsair_scan.validate_data(url, verb, headers), ' Error in wrong url test')
 
     def test_validate_data_wrong_verb(self):
         verb = 'blah'
         url = 'https://www.test.com'
-        self.assertFalse(corsair_scan.validate_data(url, verb), 'Error in wrong verb test')
+        headers = {}
+        self.assertFalse(corsair_scan.validate_data(url, verb, headers), 'Error in wrong verb test')
 
     def test_corsair_scan_no_origin(self):
         data = []
@@ -63,6 +65,18 @@ class TestCorsairScanManager(TestCase):
         response.status_code = 401
         corsair_scan.requests.get.return_value = response
         self.assertEqual(corsair_scan.corsair_scan(data), report, 'Error in bulk - 401')
+
+
+    def test_validate_wrong_structure(self):
+        data = []
+        item = {}
+        item['url'] = 'https://www.test.com'
+        item['veb'] = 'GET'
+        item['params'] = 'a=b'
+        item['headers'] = {'header1': 'value1', 'header2': 'value2', 'Origin': 'https://scarymonster.com'}
+        data.append(item)
+        report = {'summary': {}, 'report': []}
+        self.assertEqual(corsair_scan.corsair_scan(data), report, 'Error in wrong structure test')
 
 if __name__ == '__main__':
     unittest.main()
