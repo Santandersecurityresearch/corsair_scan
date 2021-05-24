@@ -49,16 +49,16 @@ Often, CORS configurations make use of wildcards, for example accepting anything
 
 # How Do I Install It?
 
-This project was developed with Python 3.9, but should work with any Python 3.x version. 
-
-corsair_scan has been designed to be used as a Python module , so the easiest way to install it is using pip.
+This project was developed with Python 3.9, but should work with any Python 3.x version. The best way to install it is using pip.
 
 `pip3 install corsair_scan --user`
 
 
 # How Do I Use It?
 
-At the moment, corsair_scan is intended to be used as a Python package. However, we plan to release this as a command line tool (CLI) in future releases.
+Corsair can be used both as a python module or as a CLI.
+
+### **Python Module**
 
 The method that performs the CORS scan is corsair_scan. Here is its definition:
 
@@ -88,10 +88,10 @@ Receives a list of requests and a parameter to enable/disable certificate check 
 
 
 
-# Example
+### Example
 
 ```
-import corsair_scan
+import corsair_scan.corsair_scan as corsair
 url_data = {}
 data = []
 verb =  'GET'
@@ -108,7 +108,7 @@ url_data['params'] = params
 url_data['headers'] = headers
 data.append(url_data)
 
-print (corsair_scan.corsair_scan(data, verify=True))
+print (corsair.corsair_scan(data, verify=True))
 ```
 
 
@@ -154,12 +154,56 @@ Response:
 
 
 
+### **CLI**
+
+As part of the pip package installation, a CLI is installed.  The syntax to execute is as follows:
+
+`corsair FILE [-nv/--noverify][-r/--report]`
+
+The CLI needs a json file with a list of requests perform the scan. An example file is provided [as part of the tests](test/testfiles/json_test.json)
+
+:
+
+```
+[{
+  "verb": "GET",
+  "url": "https://example.com/",
+  "params": "user=user1&password=1234",
+  "headers": {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Accept-Language": "en-GB,en;q=0.5",
+    "Connection": "keep-alive",
+    "Upgrade-Insecure-Requests": "1",
+    "Origin": "https://example.com",
+    "Host": "example.com"
+  }
+}]
+
+```
+
+
+
+There are also two optional parameters:
+
+- -nv / --noverify: To skip certificate validation, if you are testing against a site with a self-signed certificate
+- -r / --report: Saves the report as a JSON file
+
+
+
+### Example
+
+ 
+
+<img align="left" src="images/cli-report.png" alt="CLI report" style="zoom:80%;" />
+
+
+
 
 
 ## Roadmap
 
-* Release corsair_scan as a CLI tool
-* Read url data from a text file
+* Release corsair_scan as a CLI tool ✅
+* Read url data from a text file ✅
 * Improve reports format
 
 # Who Is Behind It?
