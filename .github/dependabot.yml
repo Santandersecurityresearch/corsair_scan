@@ -4,6 +4,8 @@ updates:
   directory: "/"
   schedule:
       interval: "daily"
+  target-branch: "dev"    
   reviewers:
     - "danielcuthbert"
     - "javixeneize"
+    - "pealtrufo"

@@ -1,4 +1,5 @@
 validators>=0.14.3
 requests>=2.23.0
-urllib3>=1.25.9
+urllib3>=1.26.4
 tldextract>=2.2.3
+click>=7.1.2
