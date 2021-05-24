@@ -65,7 +65,7 @@ jobs:
                 grep -i 'current_version = ' setup.cfg | head -1 | tr -d 'current_version = '
             - name: Push changes if PR 'to-branch' is main
               if: github.base_ref == 'main'
-              uses: ad-m/github-push-action@master
+              uses: ad-m/github-push-action@v0.6.0
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
                 branch: ${{ github.head_ref }}
