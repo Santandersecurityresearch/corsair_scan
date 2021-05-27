@@ -7,7 +7,7 @@
 # MIT License Copyright (c) 2020 Grupo Santander
 ##################################################
 # Author: Javier Dominguez Ruiz (@javixeneize)
-# Version: 1.0
+# Version: 1.1
 ##################################################
 
 import requests
@@ -19,10 +19,10 @@ from urllib.parse import urlparse
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 VERBS = ['get', 'head', 'post', 'put', 'delete', 'options', 'patch']
 SM_ORIGIN = 'https://scarymonster.com'
+LH_ORIGIN = 'localhost'
 SM_ORIGIN_NO_PROTOCOL = 'scarymonster.com'
 SM_ORIGIN_DOMAIN = 'scarymonster'
-CORS_TESTS = ['fake_origin', 'sub-domain', 'pre-domain', 'post-domain']
-
+CORS_TESTS = ['fake_origin', 'sub-domain', 'pre-domain', 'post-domain', 'localhost']
 
 def corsair_scan(data: list, verify: bool = True) -> dict:
     full_report: list = []
@@ -35,12 +35,12 @@ def corsair_scan(data: list, verify: bool = True) -> dict:
     final_report['report'] = full_report
     return final_report
 
-
 def corsair_scan_single_url(url_data: dict, verify: bool = True) -> dict:
     report: dict = {}
     if validate_data(url_data.get('url'), url_data.get('verb'), url_data.get('headers')):
         report = {'url': url_data.get('url'), 'verb': url_data.get('verb')}
         report['fake_origin'] = validate_response(url_data, SM_ORIGIN, verify)
+        report['localhost'] = validate_response(url_data, LH_ORIGIN, verify)
         if url_data.get('headers').get('Origin'):
             parsed_url = urlparse(url_data.get('headers').get('Origin'))
             parsed_domain = tldextract.extract(parsed_url.netloc)
@@ -52,7 +52,6 @@ def corsair_scan_single_url(url_data: dict, verify: bool = True) -> dict:
             report['sub-domain'] = validate_response(url_data, subdomain, verify)
             report['pre-domain'] = validate_response(url_data, predomain, verify)
     return report
-
 
 def validate_response(url_data: dict, origin: str, verify: bool) -> dict:
     url_report: dict = {}
